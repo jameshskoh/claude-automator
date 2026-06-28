@@ -1,7 +1,7 @@
 import "dotenv/config";
 import {config} from "./config.ts";
-import {spawn} from "child_process";
-import {writeFileSync} from "fs";
+import {spawn} from "node:child_process";
+import {writeFileSync} from "node:fs";
 
 async function runSession(): Promise<void> {
     return new Promise((resolve) => {
@@ -17,4 +17,4 @@ async function main() {
     }
 }
 
-main();
+await main();

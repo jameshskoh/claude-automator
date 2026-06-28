@@ -1,6 +1,6 @@
 import "dotenv/config";
 import {config} from "../../config.ts";
-import {readFileSync} from "fs";
+import {readFileSync} from "node:fs";
 import {readStdin} from "./utils/utils.ts";
 import {sendMessage} from "./utils/pubsub-client.ts";
 

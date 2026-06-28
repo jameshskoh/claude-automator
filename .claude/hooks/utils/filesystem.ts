@@ -39,7 +39,7 @@ export async function writeContent(filePath: string, content: string): Promise<b
     }
 }
 
-export async function deleteFile(filePath: string): Promise<boolean> {
+async function deleteFile(filePath: string): Promise<boolean> {
     console.log(`Deleting file ${filePath}`);
     try {
         await unlink(filePath);

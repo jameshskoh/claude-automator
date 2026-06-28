@@ -2,7 +2,7 @@ import "dotenv/config";
 import {config} from "../../../config.ts";
 import {v1} from "@google-cloud/pubsub";
 import type {google} from "@google-cloud/pubsub/build/protos/protos.js";
-import {deleteFile, read, cleanupFile, writeContent} from "./filesystem.ts";
+import {read, cleanupFile, writeContent} from "./filesystem.ts";
 
 type IReceivedMessage = google.pubsub.v1.IReceivedMessage;
 
