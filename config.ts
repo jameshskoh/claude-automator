@@ -9,6 +9,7 @@ const schema = z.object({
     PID_FILE: z.string().min(1),
     POLL_INTERVAL_MS: z.coerce.number().int().positive(),
     POLL_COUNT: z.coerce.number().int().positive(),
+    OTLP_METRICS_URL: z.url(),
 });
 
 const parsed = schema.safeParse(process.env);

@@ -44,7 +44,11 @@ export async function processUsefulMessage(): Promise<string> {
     return `Polled ${config.POLL_COUNT} times. Nothing to do now.`;
 }
 
-export async function sendMessage(message: string): Promise<boolean> {
+export type SendResult =
+    | {ok: true}
+    | {ok: false; reason: string};
+
+export async function sendMessage(message: string): Promise<SendResult> {
     const uuid = await read(config.UUID_PATH);
     const ackId = await read(config.ACK_ID_PATH);
 
@@ -53,7 +57,7 @@ export async function sendMessage(message: string): Promise<boolean> {
 
     if (uuid == null) {
         console.error("UUID file is missing — cannot send reply without knowing which question this answers. Aborting.");
-        return false;
+        return {ok: false, reason: "uuid_missing"};
     }
 
     const answer: AiResponse = {
@@ -69,7 +73,7 @@ export async function sendMessage(message: string): Promise<boolean> {
 
     if (ackId == null) {
         console.warn("ack-id file is missing — reply was published but original message will not be acknowledged and may redeliver.");
-        return false;
+        return {ok: false, reason: "ackid_missing"};
     }
 
     console.log(`Acknowledging message ID: ${ackId}`);
@@ -78,7 +82,7 @@ export async function sendMessage(message: string): Promise<boolean> {
         ackIds: [ackId],
     });
     console.log("Acknowledged successfully.");
-    return true;
+    return {ok: true};
 }
 
 const sleep = (ms: number): Promise<void> =>

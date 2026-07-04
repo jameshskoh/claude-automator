@@ -3,6 +3,7 @@ import {config} from "../../config.ts";
 import {readFileSync} from "node:fs";
 import {readStdin} from "./utils/utils.ts";
 import {sendMessage} from "./utils/pubsub-client.ts";
+import {recordHookCompleted} from "./utils/metrics.ts";
 
 interface StopHookInput {
     session_id: string;
@@ -22,9 +23,16 @@ async function main() {
 
     let success = false;
     try {
-        success = await sendMessage(input.last_assistant_message ?? "No result.");
+        const result = await sendMessage(input.last_assistant_message ?? "No result.");
+        success = result.ok;
+        if (result.ok) {
+            await recordHookCompleted("Stop", "success");
+        } else {
+            await recordHookCompleted("Stop", "failure", result.reason);
+        }
     } catch (err) {
         console.error(`Failed to send message: ${err}`);
+        await recordHookCompleted("Stop", "failure", "publish_error");
     }
 
     try {
